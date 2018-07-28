@@ -14,11 +14,13 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+
     <style name="AppTheme.Splash" parent="AppTheme.Full">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
+
 
 
 </resources>
