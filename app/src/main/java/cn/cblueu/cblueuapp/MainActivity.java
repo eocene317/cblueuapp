@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         //这是一个git测试
         //云端修改
-        //模拟冲突
+        //模拟
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
