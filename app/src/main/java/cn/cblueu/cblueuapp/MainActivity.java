@@ -17,9 +17,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //这是一个git测试
-        //云端修改
-        //模拟lkll
+        //恢复
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
