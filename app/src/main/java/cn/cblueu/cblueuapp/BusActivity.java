@@ -29,7 +29,12 @@ public class BusActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-        getPage();
+        if (null!=savedInstanceState){
+            webView.restoreState(savedInstanceState);
+        }
+        else {
+            getPage();
+        }
         setupWindowAnimations();
     }
 
@@ -77,8 +82,9 @@ public class BusActivity extends Activity {
         });
     }
 
-    public void ApplyNet(View view) {
-
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        webView.saveState(outState);
     }
 }
