@@ -6,9 +6,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
@@ -20,11 +24,19 @@ public class BusActivity extends Activity {
 
     private WebView webView;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
         getPage();
+        setupWindowAnimations();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setupWindowAnimations() {
+        Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
+        getWindow().setExitTransition(slide);
     }
 
 
@@ -35,10 +47,10 @@ public class BusActivity extends Activity {
             Toast.makeText(BusActivity.this,"获取权限",Toast.LENGTH_SHORT).show();
             webView.loadUrl("https://web.chelaile.net.cn/ch5/index.html?cityId=066&cityName=长沙&src=webapp_weixin_changshalongxiang&utm_medium=entrance&cityVersion=0&utm_source=webapp_weixin_changshalongxiang&homePage=linearound&supportSubway=1&switchCity=0&showTopLogo=0&hideFooter=1&showFav=0#!/linearound");
         }
-        else {
-            Toast.makeText(BusActivity.this,"已有权限",Toast.LENGTH_SHORT).show();
-            webView.loadUrl("https://web.chelaile.net.cn/ch5/index.html?cityId=066&cityName=长沙&src=webapp_weixin_changshalongxiang&utm_medium=entrance&cityVersion=0&utm_source=webapp_weixin_changshalongxiang&homePage=linearound&supportSubway=1&switchCity=0&showTopLogo=0&hideFooter=1&showFav=0#!/linearound");
+        if (ContextCompat.checkSelfPermission(BusActivity.this,Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(BusActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},1);
         }
+        webView.loadUrl("https://web.chelaile.net.cn/ch5/index.html?cityId=066&cityName=长沙&src=webapp_weixin_changshalongxiang&utm_medium=entrance&cityVersion=0&utm_source=webapp_weixin_changshalongxiang&homePage=linearound&supportSubway=1&switchCity=0&showTopLogo=0&hideFooter=1&showFav=0#!/linearound");
     }
 
     @SuppressLint("SetJavaScriptEnabled")
