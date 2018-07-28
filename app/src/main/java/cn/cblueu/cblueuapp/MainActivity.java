@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupWindowAnimations();
+        //这是一个git测试
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
