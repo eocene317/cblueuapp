@@ -18,8 +18,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //这是一个git测试
-        //云端修改
-        //模拟lkll
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
