@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity"
+    android:layout_height="match_parent" android:layout_width="match_parent">
+    <item
+        android:id="@+id/toolbar_search"
+        style="@style/SearchViewStyle"
+        android:orderInCategory="1"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always"
+        android:title="搜索" />
+
+    <item
+        android:id="@+id/toolbar_about"
+        android:icon="@drawable/ic_more"
+        android:orderInCategory="2"
+        android:title="setting"
+        app:showAsAction="ifRoom" />
+</menu>

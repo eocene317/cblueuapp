@@ -9,6 +9,10 @@ import android.transition.Slide;
 import android.transition.TransitionInflater;
 import android.view.View;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+
 public class MainActivity extends Activity {
 
 
@@ -17,6 +21,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         //恢复
     }
 
@@ -28,5 +33,10 @@ public class MainActivity extends Activity {
     public void StartBusActivity(View view) {
         Intent intent = new Intent(MainActivity.this,BusActivity.class);
         startActivity(intent);
+    }
+
+    @OnClick(R.id.musicActivity)
+    public void startMusic(){
+        startActivity(new Intent(MainActivity.this,MusicActivity.class));
     }
 }
