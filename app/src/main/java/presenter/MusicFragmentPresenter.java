@@ -19,6 +19,7 @@ public class MusicFragmentPresenter {
     }
 
     public void getData(String songName, Integer pageNum, String type){
+        Log.i("PageNumber",String.valueOf(pageNum));
         mView.showLoading();
         Log.i("MusicFragmentPresenter","开始进行数据请求.....");
         MusicModel.getNetData(songName, pageNum,type, new MusicFragemtCallback() {
@@ -46,6 +47,5 @@ public class MusicFragmentPresenter {
                 mView.showFailureMessage("complete");
             }
         });
-        Log.i("MusicFragmentPresenter","数据请求结束");
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,6 +23,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import adapter.MusicAdapterInterface;
 import adapter.MusicListAdapter;
 import cn.cblueu.cblueuapp.MessageEvent;
 import cn.cblueu.cblueuapp.R;
@@ -29,8 +31,9 @@ import data.Music;
 import presenter.MusicFragmentPresenter;
 
 
-public class MusicFragment extends Fragment implements MusicFragmentView {
-
+public class MusicFragment extends Fragment implements MusicFragmentView,SwipeRefreshLayout.OnRefreshListener, MusicAdapterInterface {
+    Integer pageNumber = 1;
+    private String songName;
     protected boolean isCreated = false;
     RecyclerView recyclerView;
     private String type;
@@ -43,7 +46,6 @@ public class MusicFragment extends Fragment implements MusicFragmentView {
         MusicFragment newFragment = new MusicFragment();
         Bundle bundle = new Bundle();
         bundle.putString("type", type );
-
         newFragment.setArguments(bundle);
         Log.i(type,"fragment initial");
         return newFragment;
@@ -75,9 +77,26 @@ public class MusicFragment extends Fragment implements MusicFragmentView {
         recyclerView = rootView.findViewById(R.id.recycleView);
         layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new MusicListAdapter(musicList);
+        adapter = new MusicListAdapter(getActivity(),musicList);
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Integer lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition();
+                if(lastVisibleItem +1  == musicList.size() && musicList!=null){
+                    presenter.getData(songName,pageNumber,type);
+                }
+
+            }
+        });
         swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setEnabled(false);
         presenter = new MusicFragmentPresenter(this);
         return rootView;
     }
@@ -106,12 +125,6 @@ public class MusicFragment extends Fragment implements MusicFragmentView {
     }
 
 
-    public void updateMusicList() {
-        Bitmap pic = Bitmap.createBitmap(24,24,Bitmap.Config.ARGB_8888);
-        pic.eraseColor(Color.parseColor("#FF0000"));
-        //musicList.add(new Music("qq","http://","123",type,"wz","http","dsgdjas", pic));
-    }
-
     @Override
     public void showLoading() {
         swipeRefreshLayout.setRefreshing(true);
@@ -124,13 +137,15 @@ public class MusicFragment extends Fragment implements MusicFragmentView {
 
     @Override
     public void updateData(List<Music> musicList) {
-        adapter = new MusicListAdapter(musicList);
-        adapter.notifyDataSetChanged();
-        recyclerView.setAdapter(adapter);
+        pageNumber++;
+        Integer oldNumber = this.musicList.size();
+        this.musicList.addAll(musicList);
+        adapter.notifyItemRangeChanged(oldNumber,musicList.size());
     }
 
     @Override
     public void showFailureMessage(String msg) {
+        hideLoading();
         Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
     }
 
@@ -142,10 +157,26 @@ public class MusicFragment extends Fragment implements MusicFragmentView {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         if(event.type.equals("song")){
+            pageNumber = 1;
+            if(musicList.size()!=0){
+                musicList.clear();
+                adapter.notifyDataSetChanged();
+            }
 //            Toast.makeText(getActivity(), type+"收到了"+event.message, Toast.LENGTH_SHORT).show();
             presenter.getData(event.message,1,type);
+            songName = event.message;
         }
 
     }
 
+    @Override
+    public void onRefresh() {
+        Toast.makeText(getActivity(),"刷新",Toast.LENGTH_SHORT).show();
+        presenter.getData(songName,1,type);
+    }
+
+    @Override
+    public void startDownload() {
+        Toast.makeText(getActivity(),"开始下载",Toast.LENGTH_SHORT).show();
+    }
 }
